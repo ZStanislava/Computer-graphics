@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Bezier_curve</title>
+	<meta charset='utf-8' />
+	
+	
+</head>
+
+<body>
+	<input type="text" id="n1" placeholder="n1 (P0_x)" size="12">
+	<input type="text" id="n2" placeholder="n2 (P0_y)" size="12">
+	<input type="text" id="n3" placeholder="n3 (P1_x)" size="12"> </p>
+	<input type="text" id="n4" placeholder="n1 (P1_y)" size="12">
+	<input type="text" id="n5" placeholder="n2 (P2_x)" size="12">
+	<input type="text" id="n6" placeholder="n3 (P2_y)" size="12"> </p>
+	<input type="button" value="Построить" onclick= "Draw()">
+
+	<canvas id="bezier" width="1000" height="1000">Обновите браузер</canvas>
+	<script>
+
+	var example = document.getElementById('bezier'),
+		ctx = example.getContext('2d');
+	example.height = 2000;
+	example.width = 2000;
+	var x, y; // задаем координаты точки B
+	var P0 = new Array(2);
+	var P1 = new Array(2);
+	var P2 = new Array(2); // эти точки задает пользователь
+	function Draw() {
+		P0[0] = parseFloat(document.getElementById("n1").value);
+		P0[1] = parseFloat(document.getElementById("n2").value);
+		P1[0] = parseFloat(document.getElementById("n3").value);
+		P1[1] = parseFloat(document.getElementById("n4").value);
+		P2[0] = parseFloat(document.getElementById("n5").value);
+		P2[1] = parseFloat(document.getElementById("n6").value);
+		ctx.clearRect(0, 0, example.width, example.height);
+		Drawline(P0, P1, P2);
+	}
+
+
+	function Bezier_x(P0x, P1x, P2x, t) {
+		var x = (1 - t) * (1 - t) * P0x + 2 * t * (1 - t) * P1x + t * t * P2x;
+		return x;
+	}
+
+	function Bezier_y(P0y, P1y, P2y, t) {
+		var y = (1 - t) * (1 - t) * P0y + 2 * t * (1 - t) * P1y + t * t * P2y;
+		return y;
+	}
+
+	function Drawline(P0, P1, P2) {
+		ctx.beginPath();
+		ctx.moveTo(P0[0], P0[1]);
+		let t=0;
+		let timerId = setInterval(function () {
+			let x = Bezier_x(P0[0], P1[0], P2[0], t);
+			let y = Bezier_y(P0[1], P1[1], P2[1], t);
+			ctx.lineTo(x, y);
+			ctx.moveTo(x,y);
+			ctx.stroke();
+			t+=0.1;
+			if(t > 1){
+				clearInterval(timerId);
+			}
+			}, 250);
+		ctx.closePath();
+
+	}
+
+	</script>
+</body>
+
+</html>
+
